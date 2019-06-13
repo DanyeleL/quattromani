@@ -135,7 +135,7 @@ class Quattro_save {
     $pref = $prefix . 'auth';
     $contr = $prefix . 'art';
    // $temp;
-    $meta_list_value="io";    
+    $meta_list_value="";    
 
     for ($num = 0; $num < $countpost; $num++) {
       $post_test = [];

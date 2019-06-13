@@ -121,11 +121,13 @@ class Quattromani {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-quattromani-public.php';
-    	require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quattromani-panel.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quattromani-panel.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quattromani-save.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-quattromani-client.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quattromani-shortcode.php';
-		
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quattromani-lista-autori.php';
+	  require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quattromani-lista-post.php';
+
 		$this->loader = new Quattromani_Loader();
 		
     	$panel=new Quattro_panel();

@@ -19,10 +19,14 @@ class Quattro_panel {
     add_action('add_meta_boxes', array($this, 'shortbox'));
 
     add_action('add_meta_boxes', array($this, 'metabox_post'));
-    
-    add_filter('manage_quattromani_posts_columns', array($this,'set_custom_edit_quattromani_columns'));
 
-    add_action('manage_quattromani_posts_custom_column', array($this,'custom_quattromani_column'));
+    add_filter('manage_quattromani_posts_columns', array($this, 'set_custom_edit_quattromani_columns'));
+
+    add_action('manage_quattromani_posts_custom_column', array($this, 'custom_quattromani_column'));
+
+    add_filter('manage_posts_columns', array($this, 'set_custom_edit_posts_columns'));
+
+    add_action('manage_posts_custom_column', array($this, 'custom_posts_column'));
 
     $this->prefix = 'qua_';
   }
@@ -36,19 +40,18 @@ class Quattro_panel {
     register_post_type('quattromani',
             array(
                 'labels' => array(
-                    'name' => __('Autori','quattromani'),
-                    'menu_name'=> __('Quattromani','quattromani'),
-                    'singular_name' => __('quattromani','quattromani'),
-                    'all_items'=> __('Autori','quattromani'),
-                    'add_new'=> __('Aggiungi Autori','quattromani'),
-                    'add_new_item'=>__('Aggiungi nuovo Autore','quattromani'),
-                    'edit_item'=>__('Modifica Autore','quattromani'),
-                    'search_items' => __('Cerca Autore','quattromani'),
-                    'not_found' =>  __('Nessun Autore trovato','quattromani'),
-                    'not_found_in_trash' => __('Nessun Autore trovato nel cestino','quattromani'),
-                    'view_items' => __('','quattromani'),
-                    'view_item' => __('','quattromani')
-                    
+                    'name' => __('Autori', 'quattromani'),
+                    'menu_name' => __('Quattromani', 'quattromani'),
+                    'singular_name' => __('quattromani', 'quattromani'),
+                    'all_items' => __('Autori', 'quattromani'),
+                    'add_new' => __('Aggiungi Autori', 'quattromani'),
+                    'add_new_item' => __('Aggiungi nuovo Autore', 'quattromani'),
+                    'edit_item' => __('Modifica Autore', 'quattromani'),
+                    'search_items' => __('Cerca Autore', 'quattromani'),
+                    'not_found' => __('Nessun Autore trovato', 'quattromani'),
+                    'not_found_in_trash' => __('Nessun Autore trovato nel cestino', 'quattromani'),
+                    'view_items' => __('', 'quattromani'), // cancello voce visualizza autori
+                    'view_item' => __('', 'quattromani') // cancello voce visualizza autori
                 ),
                 'public' => true,
                 'has_archive' => true,
@@ -67,10 +70,10 @@ class Quattro_panel {
     add_meta_box($id, $title, $callback, $page);
   }
 
-  /* -------creo contenuto sezione tabella (metabox)---------- */
+  /* -------creo contenuto sezione Aggiungi a lista---------- */
 
   public function callback_quattromani() {
-    wp_nonce_field( 'quattro_custom_post_type', 'callback_quattromani' );
+    wp_nonce_field('quattro_custom_post_type', 'callback_quattromani');
     $prefix = $this->prefix;
     $num_auth = $prefix . 'num';
     $reg = $prefix . 'lista_js';
@@ -86,76 +89,32 @@ class Quattro_panel {
 
       for ($ind = 0; $ind < $countpost; $ind++) {
         $aut = $prefix . 'post_' . $ind;
-
       }
     }
-    //var_dump(get_posts());
 
-    $countpost = count(get_posts(array('post_type' => 'post')));
+
     $prefix = $this->prefix;
     $aut = $prefix . 'auth';
-    $lista = [];
-    $listap = [];
-    $countp = count(get_posts());
-    $id_presenti=[];
-    $cont=0;
-     
-    for ($i = 0; $i < $countpost; $i++) {
-      $lista_id[] = get_posts(array('post_type' => 'post'))[$i]->ID;
-      $lista_name[] = get_posts(array('post_type' => 'post'))[$i]->post_title;
-      $lista_auth[]=array($lista_name[$i]=>$lista_id[$i]);
-    }
-    if (isset($lista_id) && $lista_id != "") {
-      foreach ($lista_id as $key) {
-        $control = 0;
-        $listap = get_post_meta($key, $aut, true);
-        if (is_array($listap)) {
-          foreach ($listap as $keysel) {
-            if ($keysel == get_the_ID() || get_post_status($key) == 'trash') {
-              $control = 1;
-            }
-          }        
-        }else if(isset($lista_id) && $lista_id != "" &&  $listap==get_the_ID()){
-          $control = 1;
-        }
-        if ($control == 1) {
-          $id_presenti[$cont]=$key;
-          $cont++;
-        }
-      }
-    } else {
-      $countpost = count(get_posts(array('post_type' => 'quattromani')));
-      for ($i = 0; $i < $countpost; $i++) {
-        $key = (get_posts(array('post_type' => 'quattromani'))[$i]->ID);
-        $id_presenti[$cont]=$key;
-        $cont++;
-        }
-      }
-    
-    $contat=0;
-    foreach($lista_id as $indice){
-       $auth_val[$contat]="";
-      foreach($id_presenti as $idp){
-        if($lista_id[$contat]==$idp){
-          $auth_val[$contat]='ins';
-        }
-      }
-      $contat++;
-    }
 
-    for ($i = 0; $i < $countpost; $i++) {
-      $titolo_post[] = get_posts()[$i]->post_title;
-      $posts_id[] = get_posts()[$i]->ID;
-      $posts[] = array($titolo_post[$i] => $posts_id[$i]);
-    }
+    $ret = new Quattro_post();
+    $post = $ret->lista_post(); //carico funzione che controlla post inseriti e post presenti
+
+    $auth_val = $post[0];       /*  carico valori   */
+    $titolo_post = $post[1];    /*  da funzione     */
+    $countpost = $post[2];      /*  lista_post()    */
+    $posts_id = $post[3];       /*  per passarli    */
+    $posts = $post[4];          /*  a file lista_js */
+
+    //genero html per visualizzare la lista dei post selezionati e da selezionare
     echo '<input type="text" name="' . $prefix . 'num' . '" id="' . $prefix . 'num' . '" value="' . $val . '" hidden>';
     echo '<div style="display:inline-block; width:100%;">';
     echo '<div id="1" style="float:left; margin:0"></div>';
     echo '<div style="float:left; width:30%;"><span>lista</span>';
     echo '<ul id="' . $prefix . 'lista' . '" class="qua_lista" style="float:left; width:100%;"></ul></div>';
-    echo '<div style="float:left; width:30%;"><input type="text" name="qua_cerca" id="qua_cerca" style="width:90%;paddin-bottom:10px;">lista post:<div id="test" class="qua_lista" style="width:100%;"></div></div>';
+    echo '<div style="float:left; width:30%;"><input type="text" name="qua_cerca" id="qua_cerca" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">lista post:<div id="test" class="qua_lista" style="width:100%;"></div></div>';
     echo '</div>';
 
+    //passo le variabili con i valori presi da lista_post() a lista_js
     wp_register_script($reg, plugin_dir_url(__FILE__) . 'js/lista_js.js');
     $quattro_val = array(
         'auth_val' => $auth_val,
@@ -166,25 +125,27 @@ class Quattro_panel {
     );
     wp_localize_script($reg, 'quattro_val', $quattro_val);
     wp_enqueue_script($reg);
-
   }
-    
+
+//funzione per generare metabox in cpt con nome Shortcode  
   public function shortbox() {
     add_meta_box(
             "shortbox",
             "shortcode",
-            array($this, 'shortbox_metabox_callback'),
+            array($this, 'shortbox_metabox_callback'), //richiamo la funzione che genera contenuto metabox in cpt
             'quattromani',
             'side'
     );
   }
 
+//funzione che genera contenuto metabox in cpt
   public function shortbox_metabox_callback() {
     $prefix = $this->prefix;
     $test = '[quattromani]';
     echo '<input type="text" id="' . $prefix . 'short" name="' . $prefix . 'short" value="' . $test . '" readonly/>';
   }
 
+  //funzione per generare metabox in Articoli con nome Quattromani 
   public function metabox_post() {
     add_meta_box(
             "metabox_post",
@@ -195,59 +156,30 @@ class Quattro_panel {
     );
   }
 
+  //funzione che genera contenuto metabox in Articoli
   public function metabox_post_panel() {
-    
-    $countpost = count(get_posts(array('post_type' => 'quattromani')));
+
     $prefix = $this->prefix;
     $reg = $prefix . 'lista_auth_js';
-    $aut = $prefix . 'auth';
-    $lista = [];
-    $listap = [];
     $short = '[quattromani]';
-    $countp = count(get_posts());
-    $id_presenti=[];
-    $cont=0;
-    
+
+    //genero html per visualizzare la lista dei cpt selezionati e da selezionare
     echo '<p style="margin:0;">Shortcode</p>';
     echo '<div id="1" style="float:left; margin:0"></div>';
     echo '<input type="text" id="' . $prefix . 'short" name="' . $prefix . 'short" value="' . $short . '" readonly/>';
-    echo '<div style="width:100%;"><input type="text" name="qua_cerca_auth" id="qua_cerca_auth" style="width:90%;paddin-bottom:10px;">lista post:<div id="qua_list_auth" class="qua_lista" style="width:100%;"></div>';
-    echo '<ul id="' . $prefix . 'lista_auth' . '" class="qua_lista" style=" width:100%;"></ul></div>';
+    echo '<div style="width:100%;"><input type="text" name="qua_cerca_auth" id="qua_cerca_auth" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">'.__('lista autori:','quattromani').'<div id="qua_list_auth" class="qua_lista" style="width:100%;"></div>';
+    echo 'lista selezionati:<ul id="' . $prefix . 'lista_auth' . '" class="qua_lista" style=" width:100%;"></ul></div>';
     echo '<input type="text" name="qua_art" id="qua_art" value="no" hidden>';
-    
-    $listap = get_post_meta(get_the_ID(), $aut, true);
 
-    for ($i = 0; $i < $countpost; $i++) {
-      $lista_id[] = get_posts(array('post_type' => 'quattromani'))[$i]->ID;
-      $lista_name[] = get_posts(array('post_type' => 'quattromani'))[$i]->post_title;
-      $lista_auth[]=array($lista_name[$i]=>$lista_id[$i]);
-    }
-    if (isset($listap) && $listap != "") {
-      foreach ($lista_id as $key) {
-        $control = 0;
-        if (is_array($listap)) {
-          foreach ($listap as $keysel) {
-            if ($keysel == $key || get_post_status($key) == 'trash') {
-              $control = 1;
-            }
-          }
-        } else if (!is_array($listap) && $listap == $key || get_post_status($key) == 'trash') {
-          $control = 1;
-        }
-        if ($control == 0) {
+    $ret = new Quattro_autori();
+    $autori = $ret->lista_autori(); //carico funzione che controlla cpt inseriti e cpt presenti
 
-          $id_presenti[$cont]=$key;
-          $cont++;
-        }
-      }
-    } else {
-      $countpost = count(get_posts(array('post_type' => 'quattromani')));
-      for ($i = 0; $i < $countpost; $i++) {
-        $key = (get_posts(array('post_type' => 'quattromani'))[$i]->ID);
-        $id_presenti[$cont]=$key;
-        $cont++;
-        }
-      }
+    $lista_auth = $autori[2];   /*    carico valori da      */
+    $id_presenti = $autori[3];  /* funzione lista_autori()  */
+    $lista_id = $autori[0];     /*    per passarli a        */
+    $lista_name = $autori[1];   /*     lista_auth_js        */
+
+    //passo le variabili con i valori presi da lista_post() a lista_auth_js 
     wp_register_script($reg, plugin_dir_url(__FILE__) . 'js/lista_auth_js.js');
     $quattro_val_auth = array(
         'auth_compl' => $lista_auth,
@@ -259,9 +191,11 @@ class Quattro_panel {
     wp_enqueue_script($reg);
   }
 
-    /* Aggiungo colonna in cpt per visualizzare lo shortcode */
+  /* Aggiungo colonna in cpt per visualizzare lista Articoli */
+
   function set_custom_edit_quattromani_columns($columns) {
-    //unset( $columns['date'] );
+    $temp="";
+    unset($columns['Autori']);
     $columns['Articoli'] = __('Articoli', 'your_text_domain');
     foreach ($columns as $type => $val) {
       if ($type == 'date') {
@@ -273,8 +207,67 @@ class Quattro_panel {
     return $col;
   }
 
+  /* Popolo colonna in cpt per visualizzare lista Articoli selezionati */
+
   function custom_quattromani_column() {
-      
-    echo 'work in progress';
+    $ret = new Quattro_post();
+    $post = $ret->lista_post();
+
+    $cont = 0;
+    $id_presenti = $post[5];
+    foreach ($id_presenti as $idp) {
+      $cont++;
+      if ($cont == 1)
+        echo get_the_title($idp);
+      elseif ($cont > 1 && $cont < 3)
+        echo ', ' . get_the_title($idp);
+      elseif ($cont == 3)
+        echo ', ...';
+    }
   }
+
+  /* Aggiungo colonna in Articoli (post) per visualizzare lista Autori */
+
+  function set_custom_edit_posts_columns($columns) {
+    $temp="";
+    unset($columns['Articoli']); // disabilito colonna Articoli fuori da cpt
+    $columns['Autori'] = __('Autori', 'your_text_domain');
+    foreach ($columns as $type => $val) {
+      if ($type == 'categories') {
+        $col['Autori'] = $temp;
+      }
+      $col[$type] = $val;
+    }
+
+    return $col;
+  }
+
+  /* Popolo colonna in Articoli (post) per visualizzare lista Autori selezionati */
+
+  function custom_posts_column($col) {
+    $ret = new Quattro_autori();
+    $autori = $ret->lista_autori();
+    if ($col == 'Autori') {
+      $cont = 0;
+      $id_presenti = $autori[3];
+      $lista_id = $autori[0];
+      foreach ($lista_id as $id) {
+        $ok = 0;
+        foreach ($id_presenti as $idp) {
+          if ($idp == $id)
+            $ok = 1;
+        }
+        if ($ok == 0) {
+          $cont++;
+          if ($cont == 1)
+            echo get_the_title($id);
+          elseif ($cont > 1 && $cont < 3)
+            echo ', ' . get_the_title($id);
+          elseif ($cont == 3)
+            echo ', ...';
+        }
+      }
+    }
+  }
+
 }

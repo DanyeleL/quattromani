@@ -151,9 +151,9 @@
               '<table>' +
               '<tbody  id="qua_tab_list_auth">' +
               '<tr>' +
-              '<th>select' +
+              '<th>seleziona' +
               '</th>' +
-              '<th>post' +
+              '<th>autore' +
               '</th>' +
               '</tr>' +
               '</tbody>' +

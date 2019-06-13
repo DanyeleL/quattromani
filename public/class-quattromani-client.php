@@ -13,13 +13,19 @@ class Quattro_client{
 		foreach ($lista as $key) {
 			for($i=0; $i<$countpost; $i++){
 				if(((get_posts(array('post_type'=> 'quattromani'))[$i])->ID) == $key)
-				echo '<span>'. get_the_title( $key ).' </span>';
+				if($i==0)
+				echo '<span>'.' '. get_the_title( $key ).'</span>';
+				else
+				echo '<span>'. get_the_title( $key ).'</span>';
 			  }
-		}
+				}
 		}else if($lista!= ""){
 			for($i=0; $i<$countpost; $i++){
 				if(((get_posts(array('post_type'=> 'quattromani'))[$i])->ID) == $lista)
-				echo '<span>'.get_the_title( $lista ).' </span>';
+				if($i==0)
+					echo '<span>'.' '.get_the_title( $lista ).'</span>';
+				else
+					echo '<span>'.get_the_title( $lista ).'</span>';
 			  }
 		}
 		echo '</div>';
