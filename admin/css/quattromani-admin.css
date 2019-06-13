@@ -1,0 +1,9 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+ .qua_lista{
+    width:20%; 
+    height:100px; 
+    overflow: scroll;
+ }
