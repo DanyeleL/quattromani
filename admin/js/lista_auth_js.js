@@ -2,65 +2,74 @@
   'use strict';
 
   $(function () {
-    var pre=0;
+    var pre = 0;
     var lista = [];
     var io = [];
     var ck = [];
     var num = 0;
     var pos = [];
     var lista_ass = quattro_val_auth['auth_compl'];
-    var presenti= quattro_val_auth['id_presenti'];
-    var cont=presenti.length;
-    $('#qua_art').val('no');
-    list();
-    
-    for(var x in quattro_val_auth['lista_id']) {
-      pre=0;
-       for(var y in presenti){
-         if(quattro_val_auth['lista_id'][x]==presenti[y]){
-           pre=1;
-         }
-       }if(pre==0) ck[x]="ins";
-        else ck[x]="";
-      }
+    var presenti = quattro_val_auth['id_presenti'];
+    var cont = presenti.length;
+    $('#qua_art').val('no'); //flag controlllo per class-quattromani-save.php-> verificare se si può rimuovere
+    list(); // genero lista
 
-    
-    var lung_ass=lista_ass.length;
-    var conta=-1;
-    for(var x=0;x<lung_ass;x++){
+    //genero lista flag id presenti
+    for (var x in quattro_val_auth['lista_id']) {
+      pre = 0;
+      for (var y in presenti) {
+        if (quattro_val_auth['lista_id'][x] == presenti[y]) {
+          pre = 1;
+        }
+      }
+      if (pre == 0)
+        ck[x] = "ins";
+      else
+        ck[x] = "";
+    }
+
+    // rimuovo da lista id con flag rem 
+    var lung_ass = lista_ass.length;
+    var conta = -1;
+    for (var x = 0; x < lung_ass; x++) {
       conta++;
-      if(ck[conta]!='ins'){
-        if(ck[conta]!='rem') ck[conta]="";
-        lista.splice(x,1);
+      if (ck[conta] != 'ins') {
+        if (ck[conta] != 'rem')
+          ck[conta] = "";
+        lista.splice(x, 1);
         x--;
         lung_ass--;
       }
     }
-    
-    genera();
-    popola();
-    
-    function inizializza(){
-      console.log('ini ',ck);
-    for(var ix=0; ix<lista.length; ix++){
-      console.log(ck[ix]);
-        if(ck[ix]!=""){
-          var t=ck[ix];
-          var y=[t,quattro_val_auth['lista_id'][ix]];
-        $("#1").append('<input type="text" name="qua_post_'+ix+'" id="qua_post_'+ix+'" value="'+y+'" hidden>');
-      }else {
-           $("#1").append('<input type="text" name="qua_post_'+ix+'" id="qua_post_'+ix+'" value="" hidden>');     
+
+    genera();//genero liste front-end
+    popola();//genero liste front-end
+
+    //creo input per save con flag e id in array associativo, uso lo stesso di lista_js per fare in modo che
+    //le modifiche valgano anche per il cpt oltre che per il metabox
+    function inizializza() {
+      console.log('ini ', ck);
+      for (var ix = 0; ix < lista.length; ix++) {
+        console.log(ck[ix]);
+        if (ck[ix] != "") {
+          var t = ck[ix];
+          var y = [t, quattro_val_auth['lista_id'][ix]];
+          $("#1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="' + y + '" hidden>');
+        } else {
+          $("#1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="" hidden>');
         }
-       }
+      }
     }
 
+    //genero lista tilte
     function list() {
-        for (var i in quattro_val_auth['lista_name'])
-              lista[i]=quattro_val_auth['lista_name'][i];
+      for (var i in quattro_val_auth['lista_name'])
+        lista[i] = quattro_val_auth['lista_name'][i];
     }
 
-    inizializza();
-    
+    inizializza(); //lancio l'inizializzazione
+
+    //gestisco evento su input cerca, diverso da quello di lista_js ma con stesso funzionamento
     $("#qua_cerca_auth").keyup(function () {
       list();
       var lung = lista.length;
@@ -108,24 +117,25 @@
                 '</table>');
 
       for (var i = 0; i < lista.length; i++) {
-        if(ck[i]==undefined){
-         ck[i]="";
-         }else //console.log(ck[i],i);
-        // console.log(pos[i],i);
-        $('#qua_tab_list_auth').append(
-                '<tr>' +
-                '<td>' +
-                '<button type="button" id="qua_but" data-id="' + lista[i] + '">+</button> ' +
-                '</td>' +
-                '<td>' +
-                lista[i] +
-                '</td>' +
-                '</tr>'
-                );
+        if (ck[i] == undefined) {
+          ck[i] = "";
+        } else //console.log(ck[i],i);
+          // console.log(pos[i],i);
+          $('#qua_tab_list_auth').append(
+                  '<tr>' +
+                  '<td>' +
+                  '<button type="button" id="qua_but" data-id="' + lista[i] + '">+</button> ' +
+                  '</td>' +
+                  '<td>' +
+                  lista[i] +
+                  '</td>' +
+                  '</tr>'
+                  );
       }
 
     });
 
+    //funzione che crea lista front-end selezionabili
     function popola() {
       list();
       var lung = lista.length;
@@ -160,77 +170,78 @@
               '</table>');
 
       for (var i = 0; i < lista.length; i++) {
-        if(ck[i]==undefined){
-         ck[i]="";
-         }else //console.log(ck[i],i);
-         // console.log(pos[i],i);
-        $('#qua_tab_list_auth').append(
-                '<tr>' +
-                '<td>' +
-                '<button type="button" id="qua_but" data-id="' + lista[i]+ '">+</button> ' +
-                '</td>' +
-                '<td>' +
-                lista[i] +
-                '</td>' +
-                '</tr>'
-                );
+        if (ck[i] == undefined) {
+          ck[i] = "";
+        } else //console.log(ck[i],i);
+          // console.log(pos[i],i);
+          $('#qua_tab_list_auth').append(
+                  '<tr>' +
+                  '<td>' +
+                  '<button type="button" id="qua_but" data-id="' + lista[i] + '">+</button> ' +
+                  '</td>' +
+                  '<td>' +
+                  lista[i] +
+                  '</td>' +
+                  '</tr>'
+                  );
       }
     }
-    
-    
-     
-     function genera(){
-     console.log(lista);
-     for(var test in lista){
-     console.log(test);
-     $("#qua_lista_auth").append(
-     '<li>'+
-     '<button type="button" id="qua_rem" data-id="'+lista[test]+'">-</button> '+
-     lista[test]+
-     '</li>');
-     $("#qua_cerca_auth").val("");
-     $('#qua_list_auth').children().remove();
-     cont++;
-     for(var i in lista_ass){
-    if(lista_ass[i][lista[test]]){
-     ck[i]='ins';
-     console.log(i);
-     }
-   }
-    }
-    if($("#qua_cerca_auth").val("")!="")
-                                    list();
+
+
+    //creo lista valori selezionati 
+    function genera() {
+      //console.log(lista);
+      for (var test in lista) {
+        //console.log(test);
+        $("#qua_lista_auth").append(
+                '<li>' +
+                '<button type="button" id="qua_rem" data-id="' + lista[test] + '">-</button> ' +
+                lista[test] +
+                '</li>');
+        $("#qua_cerca_auth").val("");
+        $('#qua_list_auth').children().remove();
+        cont++;
+        for (var i in lista_ass) {
+          if (lista_ass[i][lista[test]]) {
+            ck[i] = 'ins';
+            //console.log(i);
+          }
+        }
+      }
+      if ($("#qua_cerca_auth").val("") != "")
+        list();
       $('#1').children().remove();
       inizializza();
-   }
-     
-     
-     $("#qua_lista_auth").on('click','#qua_rem',function(){
-       $('#qua_art').val('yes');
-     var inizio=$(this).attr("data-id");
-     for(var i in lista_ass){
-       console.log(i,' ', inizio,' ',lista_ass[i][inizio], ' ',lista_ass);
-     if(lista_ass[i][inizio]){  
-     if(ck[i]!="")
-     ck[i]='rem';
-     }  
-     }
-     list();
-     inizializza();
-     $(this).parent().remove();
-     popola();
-     });
-     
-     $("#qua_list_auth").on('click','#qua_but',function(){
-     $('#qua_art').val('yes');
-     $("#qua_cerca_auth").val($(this).attr('data-id'));
-     lista=[$(this).attr('data-id')];
-     console.log(lista);
-     genera();
-     popola();
-     $(this).parent().parent().remove();
-     
-     });
+    }
+
+    //gestisco evento bottone rimozione  
+    $("#qua_lista_auth").on('click', '#qua_rem', function () {
+      $('#qua_art').val('yes'); //imposto flag per save->verificare se rimovibile
+      var inizio = $(this).attr("data-id");
+      for (var i in lista_ass) {
+        //  console.log(i,' ', inizio,' ',lista_ass[i][inizio], ' ',lista_ass);
+        if (lista_ass[i][inizio]) {
+          if (ck[i] != "")
+            ck[i] = 'rem';
+        }
+      }
+      list();//ricreo lista
+      inizializza();//inizializzo
+      $(this).parent().remove();//rimuovo selezionato
+      popola();//rigenero front-end
+    });
+
+    //gestisco evento aggiungi (come per lista_js)
+    $("#qua_list_auth").on('click', '#qua_but', function () {
+      $('#qua_art').val('yes'); //imposto flag per save->verificare se rimovibile
+      $("#qua_cerca_auth").val($(this).attr('data-id'));
+      lista = [$(this).attr('data-id')];
+      //console.log(lista);
+      genera();
+      popola();
+      $(this).parent().parent().remove();
+
+    });
 
   });	/**
    * All of the code for your admin-facing JavaScript source

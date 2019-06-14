@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('WPINC')) {
+  die;
+}
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -158,7 +161,7 @@ class Quattro_panel {
 
   //funzione che genera contenuto metabox in Articoli
   public function metabox_post_panel() {
-
+    wp_nonce_field('metabox_post', 'metabox_post_panel');
     $prefix = $this->prefix;
     $reg = $prefix . 'lista_auth_js';
     $short = '[quattromani]';
@@ -167,7 +170,7 @@ class Quattro_panel {
     echo '<p style="margin:0;">Shortcode</p>';
     echo '<div id="1" style="float:left; margin:0"></div>';
     echo '<input type="text" id="' . $prefix . 'short" name="' . $prefix . 'short" value="' . $short . '" readonly/>';
-    echo '<div style="width:100%;"><input type="text" name="qua_cerca_auth" id="qua_cerca_auth" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">'.__('lista autori:','quattromani').'<div id="qua_list_auth" class="qua_lista" style="width:100%;"></div>';
+    echo '<div style="width:100%;"><input type="text" name="qua_cerca_auth" id="qua_cerca_auth" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">' . __('lista autori:', 'quattromani') . '<div id="qua_list_auth" class="qua_lista" style="width:100%;"></div>';
     echo 'lista selezionati:<ul id="' . $prefix . 'lista_auth' . '" class="qua_lista" style=" width:100%;"></ul></div>';
     echo '<input type="text" name="qua_art" id="qua_art" value="no" hidden>';
 
@@ -194,7 +197,7 @@ class Quattro_panel {
   /* Aggiungo colonna in cpt per visualizzare lista Articoli */
 
   function set_custom_edit_quattromani_columns($columns) {
-    $temp="";
+    $temp = "";
     unset($columns['Autori']);
     $columns['Articoli'] = __('Articoli', 'your_text_domain');
     foreach ($columns as $type => $val) {
@@ -229,7 +232,7 @@ class Quattro_panel {
   /* Aggiungo colonna in Articoli (post) per visualizzare lista Autori */
 
   function set_custom_edit_posts_columns($columns) {
-    $temp="";
+    $temp = "";
     unset($columns['Articoli']); // disabilito colonna Articoli fuori da cpt
     $columns['Autori'] = __('Autori', 'your_text_domain');
     foreach ($columns as $type => $val) {
