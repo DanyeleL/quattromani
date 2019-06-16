@@ -111,7 +111,7 @@ class Quattro_panel {
     //genero html per visualizzare la lista dei post selezionati e da selezionare
     echo '<input type="text" name="' . $prefix . 'num' . '" id="' . $prefix . 'num' . '" value="' . $val . '" hidden>';
     echo '<div style="display:inline-block; width:100%;">';
-    echo '<div id="1" style="float:left; margin:0"></div>';
+    echo '<div id="qua_1" style="float:left; margin:0"></div>';
     echo '<div style="float:left; width:30%;"><span>lista</span>';
     echo '<ul id="' . $prefix . 'lista' . '" class="qua_lista" style="float:left; width:100%;"></ul></div>';
     echo '<div style="float:left; width:30%;"><input type="text" name="qua_cerca" id="qua_cerca" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">lista post:<div id="test" class="qua_lista" style="width:100%;"></div></div>';
@@ -168,7 +168,7 @@ class Quattro_panel {
 
     //genero html per visualizzare la lista dei cpt selezionati e da selezionare
     echo '<p style="margin:0;">Shortcode</p>';
-    echo '<div id="1" style="float:left; margin:0"></div>';
+    echo '<div id="qua_1" style="float:left; margin:0"></div>';
     echo '<input type="text" id="' . $prefix . 'short" name="' . $prefix . 'short" value="' . $short . '" readonly/>';
     echo '<div style="width:100%;"><input type="text" name="qua_cerca_auth" id="qua_cerca_auth" style="width:90%;paddin-bottom:10px;" placeholder="Cerca">' . __('lista autori:', 'quattromani') . '<div id="qua_list_auth" class="qua_lista" style="width:100%;"></div>';
     echo 'lista selezionati:<ul id="' . $prefix . 'lista_auth' . '" class="qua_lista" style=" width:100%;"></ul></div>';

@@ -45,9 +45,9 @@
         if (ck[ix] != "") {
           var t = ck[ix];
           var y = [t, quattro_val['posts_id'][ix]]; //creo array con flag e id da passare al save con POST
-          $("#1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="' + y + '" hidden>');
+          $("#qua_1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="' + y + '" hidden>');
         } else {
-          $("#1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="" hidden>');
+          $("#qua_1").append('<input type="text" name="qua_post_' + ix + '" id="qua_post_' + ix + '" value="" hidden>');
         }
       }
     }
