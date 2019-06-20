@@ -197,8 +197,13 @@ class Quattro_panel {
   /* Aggiungo colonna in cpt per visualizzare lista Articoli */
 
   function set_custom_edit_quattromani_columns($columns) {
+     $rim=$columns;
+    foreach ($rim as $type => $val) {
+      if($type!='date' &&  $type!='title' && $type!="cb")
+        unset($columns[$type]);
+    }
     $temp = "";
-    unset($columns['Autori']);
+    //unset($columns['Autori']);
     $columns['Articoli'] = __('Articoli', 'your_text_domain');
     foreach ($columns as $type => $val) {
       if ($type == 'date') {
