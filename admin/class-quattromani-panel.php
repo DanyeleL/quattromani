@@ -217,10 +217,10 @@ class Quattro_panel {
 
   /* Popolo colonna in cpt per visualizzare lista Articoli selezionati */
 
-  function custom_quattromani_column() {
+  function custom_quattromani_column($col) {
     $ret = new Quattro_post();
     $post = $ret->lista_post();
-
+    if($col=='Articoli'){
     $cont = 0;
     $id_presenti = $post[5];
     foreach ($id_presenti as $idp) {
@@ -232,6 +232,7 @@ class Quattro_panel {
       elseif ($cont == 3)
         echo ', ...';
     }
+  }
   }
 
   /* Aggiungo colonna in Articoli (post) per visualizzare lista Autori */
